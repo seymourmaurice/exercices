@@ -1,0 +1,268 @@
+
+from tkinter import ttk
+from tkinter		import *
+from tkcalendar import Calendar, DateEntry
+import smtplib
+from email.message import EmailMessage
+import modulext
+import email, smtplib, ssl
+from email import encoders
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from tkinter.filedialog import askopenfilename
+import tkinter as tk
+
+### listes
+chargeaffaire=["sterlin","chambaz","thiebaut","belot","lamache"]
+site=["pont de claix","la chambre","jarrie","hors site"]
+matiere=["316l","304l","AU4G","Acier"]
+
+
+###creation fenetre
+fenetre = Tk()
+fenetre.geometry('900x400')
+fenetre.title('logiciel de commande interne v1.0 ')
+
+#####  chargé d'affaires
+
+Label(fenetre, text= "chargé d'affaires",font=("courier",20)).grid(row=0, column=0)
+      
+listecaff= ttk.Combobox(fenetre,width=40, values= chargeaffaire)
+listecaff.grid(row=0, column=1)
+
+##### site
+
+Label(fenetre, text= "site",font=("courier",20)).grid(row=1)
+
+listesite= ttk.Combobox(fenetre,width=40, values= site)
+listesite.grid(row=1,column=1)
+
+##### matiere
+
+Label(fenetre, text="matiere",font=("courier",20)).grid(row=2)
+
+listematiere=ttk.Combobox(fenetre,width=40, values= matiere)
+listematiere.grid(row=2,column=1)
+
+##### chantier
+
+Label(fenetre, text= "chantier",font=("courier",20)).grid(row=3, column=0)
+chantier= ttk.Entry(fenetre,width=40)
+chantier.insert(0, "entrer chantier")
+chantier.grid(row=3,column=1)
+chantier.get()
+
+####numero d'iso
+
+Label(fenetre, text= "numero d'iso",font=("courier",20)).grid(row=4, column=0)
+
+niso= ttk.Entry(fenetre,width=40)
+niso.insert(0, "entrer numero")
+niso.grid(row=4,column=1)
+
+
+#####classe de tuyauterie
+
+Label(fenetre, text="classe de tuyauterie",font=("courier",20)).grid(row=5, column=0)
+
+classe=Spinbox(fenetre,width=40,from_=0, to=4)
+classe.grid(row=5,column=1)
+classe.get()
+
+#####date de livraison
+
+Label(fenetre, text="date de livraison",font=("courier",20)).grid(row=6, column=0)
+
+date=DateEntry(fenetre)
+date.grid(row=6, column=1)
+
+####nombre de pouces
+Label(fenetre, text="nombre de pouces",font=("courier",20)).grid(row=7, column=0)
+
+nbrepouces=Spinbox(fenetre,width=40,from_=0, to=4)
+nbrepouces.grid(row=7,column=1)
+nbrepouces.get()
+
+
+
+ 
+
+
+
+
+def boutton_clic():
+        reponse = messagebox.askquestion("attention","etes vous sur des saisies?")
+        if reponse == 'yes':
+            print("l'utilisateur confirme les infos")
+            # enregistrer()
+            mail2()
+        else:
+            print("l'utilisateur infirme les infos")
+            
+ #################################definition de la fonction ok pour envoyer           
+
+def enregistrer():  
+    liste_chargé=listecaff.get()
+    Numero_iso=niso.get()
+    Classe_tuyauterie=classe.get()
+    Matiere=listematiere.get()
+    site_demande=listesite.get()
+    date_livraison=date.get()
+    
+    print("classe",Classe_tuyauterie)
+    print("numero iso",Numero_iso)
+    print("matiere",Matiere)
+    print("chargé affaire: ",liste_chargé)
+    print("site: ",site_demande)
+    print("livraison pour le: ",date_livraison)
+    
+    
+    if str(liste_chargé) or var(Numero_iso) == None:
+        print ("La variable du champs de saisi est vide")
+        messagebox.showinfo(message="case vide!!")
+        
+         
+             
+
+    else:
+        print ("La variable du champs de saisi n'est pas vide")
+         
+        if Matiere == '316l'or Matiere == '304l':
+             print("pour: atelier villard bonnot")
+             dest= 'seymourmaurice@gmx.com'
+             mail()
+             
+        else:
+             print("pour: atelier pont de claix")
+             dest= 'seymour.maurice@snef.fr'
+             mail()
+             print("commande envoyé")
+
+    
+
+
+#################################fonction envoi de mail
+dest= 'seymourmaurice@gmx.com'
+
+# def mail():
+#     liste_chargé=listecaff.get()
+#     Numero_iso=niso.get()
+#     Classe_tuyauterie=classe.get()
+#     Matiere=listematiere.get()
+#     site_demande=listesite.get()
+#     date_livraison=date.get()
+    
+#     ###definition du corp de message
+#     corp_message="commande: "+liste_chargé+Numero_iso+Classe_tuyauterie+Matiere+site_demande+date_livraison
+    
+    
+
+
+#     msg = EmailMessage()
+#     msg.set_content(corp_message)
+
+#     msg['Subject'] = "demande de fabrication"
+#     msg['From'] = "chargé d'affaires"
+#     msg['To'] = dest
+
+# # Send the message via our own SMTP server.
+#     server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+#     server.login("paulcoch41@gmail.com", "sarce1519")
+#     server.send_message(msg)
+#     server.quit()
+    
+#     #####
+    
+def mail2():
+    liste_chargé=listecaff.get()
+    Numero_iso=niso.get()
+    Classe_tuyauterie=classe.get()
+    Matiere=listematiere.get()
+    site_demande=listesite.get()
+    date_livraison=date.get()
+    
+    
+    subject = "commande interne fabrication"
+    body = "commande: "+liste_chargé+Numero_iso+Classe_tuyauterie+Matiere+site_demande+date_livraison
+    sender_email = "paulcoch41@gmail.com"
+    receiver_email = "seymourmaurice@gmx.com"
+    password = "sarce1519"
+
+# Create a multipart message and set headers
+    message = MIMEMultipart()
+    message["From"] = sender_email
+    message["To"] = receiver_email
+    message["Subject"] = subject
+    message["Bcc"] = receiver_email  # Recommended for mass emails
+
+# Add body to email
+    message.attach(MIMEText(body, "plain"))
+
+    filename = "document.pdf"  # In same directory as script
+
+# Open PDF file in binary mode
+    with open(filename, "rb") as attachment:
+    # Add file as application/octet-stream
+    # Email client can usually download this automatically as attachment
+        part = MIMEBase("application", "octet-stream")
+        part.set_payload(attachment.read())
+    encoders.encode_base64(part)
+    part.add_header(
+        "Content-Disposition",
+        f"attachment; filename= {filename}",
+        )
+
+    message.attach(part)
+    text = message.as_string()
+
+# Log in to server using secure context and send email
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+        server.login(sender_email, password)
+        server.sendmail(sender_email, receiver_email, text)
+        messagebox.showinfo(message="commande envoyée")
+ 
+####################################""
+    
+def clear():
+    chantier.delete("0","end")
+    listecaff.delete("0","end")
+    listematiere.delete("0","end")
+    listesite.delete("0","end")
+    classe.delete("0","end")
+    niso.delete("0","end")
+    
+###################################
+
+def btnaide():
+    print("Aide demandé")
+    messagebox.showinfo(message="Hotline 07.61.34.06.09 ou seymour.maurice@snef.fr")
+    
+###################################
+
+def fctjoindre():
+    
+    root = tk.Tk()
+    root.withdraw()                 # pour ne pas afficher la fenêtre Tk
+    name =askopenfilename(title="selectionner isometrie",multiple=TRUE) 
+    # fichier=name.get()
+
+    print (name)
+    
+    
+############################definition des bouttons
+    
+effacer=Button(fenetre,width=40,height=1,command=clear,bg='red',text="effacer tout",font=20)
+effacer.grid(row=10,column=1)
+
+envoyer=Button(fenetre,width=40,height=1,command=boutton_clic,bg='green',text="envoyer commande",font=20)
+envoyer.grid(row=10)
+
+envoyer=Button(fenetre,width=40,height=1,command=fctjoindre,bg='blue',text="joindre iso",font=20)
+envoyer.grid(row=11)
+
+envoyer=Button(fenetre,width=40,height=1,command=btnaide,bg='pink',text="aide",font=20)
+envoyer.grid(row=11,column=1)
+
+fenetre.mainloop()
