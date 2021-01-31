@@ -4,7 +4,7 @@ from tkinter		import *
 from tkcalendar import Calendar, DateEntry
 import smtplib
 from email.message import EmailMessage
-import modulext
+
 import email, smtplib, ssl
 from email import encoders
 from email.mime.base import MIMEBase
@@ -13,6 +13,8 @@ from email.mime.text import MIMEText
 from tkinter.filedialog import askopenfilename
 import tkinter as tk
 
+
+global dest
 ### listes
 chargeaffaire=["sterlin","chambaz","thiebaut","belot","lamache"]
 site=["pont de claix","la chambre","jarrie","hors site"]
@@ -95,8 +97,8 @@ def boutton_clic():
         reponse = messagebox.askquestion("attention","etes vous sur des saisies?")
         if reponse == 'yes':
             print("l'utilisateur confirme les infos")
-            # enregistrer()
-            mail2()
+            enregistrer()
+            
         else:
             print("l'utilisateur infirme les infos")
             
@@ -109,7 +111,8 @@ def enregistrer():
     Matiere=listematiere.get()
     site_demande=listesite.get()
     date_livraison=date.get()
-    
+    dest="o"
+
     print("classe",Classe_tuyauterie)
     print("numero iso",Numero_iso)
     print("matiere",Matiere)
@@ -118,7 +121,7 @@ def enregistrer():
     print("livraison pour le: ",date_livraison)
     
     
-    if str(liste_chargé) or var(Numero_iso) == None:
+    if str(liste_chargé)== None:
         print ("La variable du champs de saisi est vide")
         messagebox.showinfo(message="case vide!!")
         
@@ -130,20 +133,23 @@ def enregistrer():
          
         if Matiere == '316l'or Matiere == '304l':
              print("pour: atelier villard bonnot")
-             dest= 'seymourmaurice@gmx.com'
-             mail()
+            
+             
+             mail2('seymourmaurice@gmx.com')
+             print("commande envoyé")
              
         else:
              print("pour: atelier pont de claix")
-             dest= 'seymour.maurice@snef.fr'
-             mail()
+             
+    
+             mail2('seymour.maurice@snef.fr')
              print("commande envoyé")
 
     
 
 
 #################################fonction envoi de mail
-dest= 'seymourmaurice@gmx.com'
+
 
 # def mail():
 #     liste_chargé=listecaff.get()
@@ -174,7 +180,7 @@ dest= 'seymourmaurice@gmx.com'
     
 #     #####
     
-def mail2():
+def mail2(dest):
     liste_chargé=listecaff.get()
     Numero_iso=niso.get()
     Classe_tuyauterie=classe.get()
@@ -186,7 +192,8 @@ def mail2():
     subject = "commande interne fabrication"
     body = "commande: "+liste_chargé+Numero_iso+Classe_tuyauterie+Matiere+site_demande+date_livraison
     sender_email = "paulcoch41@gmail.com"
-    receiver_email = "seymourmaurice@gmx.com"
+    
+    receiver_email = dest
     password = "sarce1519"
 
 # Create a multipart message and set headers
@@ -222,6 +229,7 @@ def mail2():
         server.login(sender_email, password)
         server.sendmail(sender_email, receiver_email, text)
         messagebox.showinfo(message="commande envoyée")
+        print(dest)
  
 ####################################""
     
